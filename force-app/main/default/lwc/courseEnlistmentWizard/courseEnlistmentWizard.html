@@ -1,0 +1,83 @@
+<template>
+    <lightning-card icon-name="standard:education">
+        <h2 slot="title">Course Enlistment</h2> 
+        <div class="slds-p-horizontal_medium slds-p-top_x-small">
+            <lightning-progress-indicator current-step={currentStepString} type="base">
+                <lightning-progress-step label="Welcome" value="1"></lightning-progress-step>
+                <lightning-progress-step label="Course" value="2"></lightning-progress-step>
+                <lightning-progress-step label="Course Schedules" value="3"></lightning-progress-step>
+             </lightning-progress-indicator>
+        </div>
+
+            <template if:true = {errorMessage}>
+                <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+                    <lightning-icon icon-name="utility:error" variant="inverse" size="x-small"></lightning-icon>
+                    <span class="slds-m-left_x-small">{errorMessage}</span>
+                </div>
+            </template>
+            
+
+        <template if:true = {loading}>
+            <lightning-spinner size="small"></lightning-spinner>
+        </template>
+
+        <div class="step-panel slds-p-around_medium">
+
+            <template if:false={isSuccess}>
+                 <template if:true={isStep1}>
+                  <c-welcome-screen></c-welcome-screen>
+                </template>
+
+                <template if:true={isStep2}>
+                    <c-course-picker
+                        record-id={recordId}
+                        selected-id={courseId}
+                        oncourseselected={handleCourseSelected}>
+                    </c-course-picker>
+                </template>
+
+                <template if:true={isStep3}>
+                        <c-course-schedules-picker
+                            record-id={recordId}
+                            course-id={courseId}
+                            course-name={courseName}
+                            onscheduleselected={handleScheduleSelected}>
+                        </c-course-schedules-picker>
+                    </template>
+            </template>
+
+
+            <template if:true= {isSuccess}>
+                <c-result-screen
+                  message = {successMessage}
+                >  
+                </c-result-screen>
+            </template>
+
+        </div>
+
+        <div class="slds-p-around_medium slds-text-align_right">
+            <lightning-button
+                if:true={showPrevious}
+                label="Previous"
+                onclick={handleBack}>
+            </lightning-button>
+
+            <lightning-button
+                if:true={showNext}
+                label="Next"
+                variant="brand"
+                class="slds-m-left_x-small"
+                disabled={isNextDisabled}
+                onclick={handleNext}>
+            </lightning-button>
+
+                <lightning-button
+                    if:true ={isToSave}
+                    label="Save"
+                    onclick={handleSave}>
+                </lightning-button>
+        </div>
+
+    </lightning-card>
+</template>

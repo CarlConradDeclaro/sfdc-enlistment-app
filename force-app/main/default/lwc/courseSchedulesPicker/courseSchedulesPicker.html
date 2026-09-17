@@ -1,0 +1,43 @@
+<template>
+    <h2 class="slds-text-heading_small slds-m-bottom_small">
+        Schedules for {courseName}
+    </h2>
+
+    <template if:true={hasSchedules}>
+        <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+            <thead>
+                <tr class="slds-line-height_reset">
+                    <th style="width: 3rem;"></th>
+                    <th scope="col"><div class="slds-truncate">Days</div></th>
+                    <th scope="col"><div class="slds-truncate">Time</div></th>
+                    <th scope="col"><div class="slds-truncate">Venue</div></th>
+                </tr>
+            </thead>
+            <tbody>
+                <template for:each={schedules} for:item="sched">
+                    <tr key={sched.Id}
+                        class={sched.rowClass}
+                        data-id={sched.Id}
+                        onclick={handleRowClick}>
+                        <td class="slds-text-align_center">
+                            <input type="radio"
+                                   name="scheduleChoice"
+                                   checked={sched.selected} />
+                        </td>
+                        <td>{sched.daysText}</td>
+                        <td>{sched.timeSlot}</td>
+                        <td>{sched.venue}</td>
+                    </tr>
+                </template>
+            </tbody>
+        </table>
+    </template>
+
+    <template if:false={hasSchedules}>
+        <p class="slds-text-color_weak">No schedules available for this course.</p>
+    </template>
+
+    <template if:true={errorMessage}>
+        <p class="slds-text-color_error">{errorMessage}</p>
+    </template>
+</template>

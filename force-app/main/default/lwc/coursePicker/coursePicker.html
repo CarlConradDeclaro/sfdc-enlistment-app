@@ -1,0 +1,69 @@
+<template>
+    <lightning-card title="Available Courses">
+        <div class="slds-p-horizontal_small">
+
+            <template if:true={hasCourses}>
+
+                <div class="table-toolbar">
+                    <span>{selectionLabel}</span>
+                </div>
+
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                    <thead>
+                        <tr class="slds-line-height_reset">
+                            <th style="width: 3rem;"></th>
+                            <th scope="col"><div class="slds-truncate">Course Name</div></th>
+                            <th scope="col" class="slds-text-align_right">
+                                <div class="slds-truncate">Units</div>
+                            </th>
+                            <th scope="col"><div class="slds-truncate">Faculty</div></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <template for:each={courses} for:item="course">
+                            <tr key={course.Id}
+                                class={course.rowClass}
+                                data-id={course.Id}
+                                onclick={handleRowClick}>
+
+                                <td class="slds-text-align_center">
+                                    <input type="radio"
+                                           name="courseChoice"
+                                           data-id={course.Id}
+                                           checked={course.selected}
+                                           onchange={handleSelect} />
+                                </td>
+
+                                <th scope="row">
+                                    <div class="slds-truncate" title={course.name}>
+                                        {course.name}
+                                    </div>
+                                </th>
+
+                                <td class="slds-text-align_right">{course.units}</td>
+
+                                <td>{course.facultyName}</td>
+
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+
+               
+
+            </template>
+
+            <template if:false={hasCourses}>
+                <p class="slds-text-color_weak slds-p-around_medium">
+                    No courses found for this semester and year level.
+                </p>
+            </template>
+
+            <template if:true={errorMessage}>
+                <p class="slds-text-color_error slds-p-around_medium">{errorMessage}</p>
+            </template>
+
+        </div>
+    </lightning-card>
+</template>
