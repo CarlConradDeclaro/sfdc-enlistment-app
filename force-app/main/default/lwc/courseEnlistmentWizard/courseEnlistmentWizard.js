@@ -85,8 +85,7 @@ export default class CourseEnlistmentWizard extends LightningElement {
     }
 
     handleBack() {
-        if(this.currentStep < LAST_STEP)
-            this.currentStep--;
+        this.currentStep--;
 
         this.isSuccess = false;
         this.errorMessage = null
@@ -105,7 +104,7 @@ export default class CourseEnlistmentWizard extends LightningElement {
     }
 
     get isNextDisabled() {
-        if (this.isStep1) return false;      // welcome screen - always allowed
+        if (this.isStep1) return false;    
         if (this.isStep2) return !this.courseId;
         return false;
     }
