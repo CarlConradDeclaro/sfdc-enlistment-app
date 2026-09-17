@@ -1,6 +1,9 @@
 import { LightningElement, api } from 'lwc';
 import createCourseEnlistment from '@salesforce/apex/CourseEnlistmentController.createCourseEnlistment'
+
+
 const LAST_STEP = 3 ;
+const SUCCESS_MESSAGE = 'Course Successfully inserted';
 
 export default class CourseEnlistmentWizard extends LightningElement {
     @api recordId;
@@ -15,7 +18,7 @@ export default class CourseEnlistmentWizard extends LightningElement {
     successMessage;
     isSuccess = false;
 
-    Units;
+    units;
 
 
     get isStep1() { return this.currentStep === 1; }
@@ -24,31 +27,35 @@ export default class CourseEnlistmentWizard extends LightningElement {
 
 
 
+
     async handleCourseEnlistment(){
         this.errorMessage = null;
         this.loading = true;
 
+        if(!this.recordId || !this.scheduleId){
+            this.errorMessage  = 'Missing required information';
+            return;
+        }
+
         let res;
         try {
-
-
           res = await createCourseEnlistment({
              courseScheduleId : this.scheduleId,
              enlistmentId : this.recordId
            })
            this.loading = false;
- 
-
         } catch (error) {
             this.errorMessage = error?.body?.message ?? 'Something went wrong' ;
             this.isSuccess = false;
+        }finally{
+            this.loading = false;
         }
-         this.loading = false;
 
-        if(res){
-            this.successMessage= 'Course Successfully inserted'
-            this.isSuccess = true;
+        if(!res){
+          return;
         }
+        this.successMessage= SUCCESS_MESSAGE;
+        this.isSuccess = true;
 
     }
 
@@ -60,7 +67,7 @@ export default class CourseEnlistmentWizard extends LightningElement {
     handleCourseSelected(event) {
         this.courseId = event.detail.courseId;
         this.courseName = event.detail.courseName;
-        this.Units = event.detail.units
+        this.units = event.detail.units
     }
 
     handleScheduleSelected(event) {
@@ -69,15 +76,18 @@ export default class CourseEnlistmentWizard extends LightningElement {
     }
 
     handleNext() {
-        this.currentStep += 1;
+        if(this.currentStep < LAST_STEP)
+            this.currentStep++;
     }
 
-    handleSave(){
-        this.handleCourseEnlistment();
+    async handleSave(){
+        await this.handleCourseEnlistment();
     }
 
     handleBack() {
-        this.currentStep -= 1;
+        if(this.currentStep < LAST_STEP)
+            this.currentStep--;
+
         this.isSuccess = false;
         this.errorMessage = null
     }
@@ -91,7 +101,7 @@ export default class CourseEnlistmentWizard extends LightningElement {
     }
 
     get isToSave(){
-        return this.currentStep == LAST_STEP && this.isSuccess == false;
+        return this.currentStep == LAST_STEP && !this.isSuccess;
     }
 
     get isNextDisabled() {
