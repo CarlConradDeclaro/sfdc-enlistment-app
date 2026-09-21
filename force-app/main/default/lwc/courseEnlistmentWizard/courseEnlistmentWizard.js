@@ -6,9 +6,11 @@ const LAST_STEP = 3 ;
 const SUCCESS_MESSAGE = 'Course Successfully inserted';
 
 export default class CourseEnlistmentWizard extends LightningElement {
-    @api recordId;
+    //this makes the recordId publicly available
+    @api recordId; // this variable is auto-fill when you are in the record page 
 
-    currentStep = 1;
+    // these variables are accessible only in this component
+    currentStep = 1; 
     courseId;
     courseName;
     loading =false;
@@ -28,6 +30,7 @@ export default class CourseEnlistmentWizard extends LightningElement {
 
 
 
+    
     async handleCourseEnlistment(){
         this.errorMessage = null;
         this.loading = true;
@@ -39,7 +42,7 @@ export default class CourseEnlistmentWizard extends LightningElement {
 
         let res;
         try {
-          res = await createCourseEnlistment({
+          res = await createCourseEnlistment({//create a course enlistment 
              courseScheduleId : this.scheduleId,
              enlistmentId : this.recordId
            })
@@ -64,12 +67,14 @@ export default class CourseEnlistmentWizard extends LightningElement {
         return String(this.currentStep);
     }
 
+    //from custom event 
     handleCourseSelected(event) {
         this.courseId = event.detail.courseId;
         this.courseName = event.detail.courseName;
         this.units = event.detail.units
     }
 
+    //custom event created from the child component
     handleScheduleSelected(event) {
     this.scheduleId = event.detail.scheduleId;
     this.scheduleName = event.detail.scheduleName;
@@ -80,6 +85,7 @@ export default class CourseEnlistmentWizard extends LightningElement {
             this.currentStep++;
     }
 
+    
     async handleSave(){
         await this.handleCourseEnlistment();
     }

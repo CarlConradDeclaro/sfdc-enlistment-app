@@ -1,5 +1,6 @@
 public with sharing class EnlistmentSelector {
-     
+    
+    // fetch enlistment 
     public static Enlistment__c getEnlistmentById(Id enlistmentId){
            Enlistment__c enlistment = [
             SELECT Id, Semester__c, Student_Year_Level__c,

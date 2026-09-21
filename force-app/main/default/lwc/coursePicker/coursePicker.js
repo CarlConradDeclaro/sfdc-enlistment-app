@@ -8,10 +8,11 @@ export default class CoursePicker extends LightningElement {
     selectedId;
     errorMessage;
 
-    @wire(getCourses, { enlistmentId: '$recordId' })
+    
+    @wire(getCourses, { enlistmentId: '$recordId' }) // call the getCourses from the controller
     wireCourses({ data, error }) {
         if (data) {
-            this.rawCourses = data;
+            this.rawCourses = data; //assign the data to the courses array variable
             this.buildRows();
             this.errorMessage = undefined;
         } else if (error) {
@@ -21,7 +22,8 @@ export default class CoursePicker extends LightningElement {
     }
 
     rawCourses = [];
-
+    
+     
     buildRows() {
         this.courses = this.rawCourses.map(c => ({
             Id: c.Id,
@@ -42,12 +44,14 @@ export default class CoursePicker extends LightningElement {
     this.notifyParent();
     }
 
+
     handleRowClick(event) {
         this.selectedId = event.currentTarget.dataset.id;
         this.buildRows();
         this.notifyParent();
     }
 
+    //custom event to notify the parent about the selected course 
     notifyParent() {
         const c = this.selectedCourse;
         this.dispatchEvent(new CustomEvent('courseselected', {
@@ -55,6 +59,7 @@ export default class CoursePicker extends LightningElement {
         }));
     }
 
+    //return the selected course
     get selectedCourse() {
         return this.courses.find(c => c.Id === this.selectedId);
     }
@@ -64,6 +69,7 @@ export default class CoursePicker extends LightningElement {
         return c ? `${c.name} — ${c.units} units` : 'No course selected';
     }
 
+    //check if there is course
     get hasCourses() {
         return this.courses.length > 0;
     }

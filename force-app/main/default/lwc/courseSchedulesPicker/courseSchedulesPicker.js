@@ -11,7 +11,7 @@ export default class CourseSchedulesPicker extends LightningElement {
     selectedId;
     errorMessage;
 
-    @wire(getCourseScheduleByEnlistment, {
+    @wire(getCourseScheduleByEnlistment, {//call this method from the controller
         enlistmentId: '$recordId',
         selectedCourseId: '$courseId'
     })

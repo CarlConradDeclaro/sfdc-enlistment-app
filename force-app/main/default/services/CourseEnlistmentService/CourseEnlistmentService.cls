@@ -2,6 +2,7 @@ public with sharing class CourseEnlistmentService {
    
     private static final String MAX_UNITS_ERROR = 'Maximum units exceeded';
 
+    //fetch all the courses
     public static List<Course__c> getCourses(Id enlistmentId){
         if(enlistmentId == null)
             return new List<Course__c>();
@@ -9,14 +10,16 @@ public with sharing class CourseEnlistmentService {
 
         return CourseSelector.getCourseByEnlistmentSemesterAndYearLevel(enlistment);
     }
-
+    
+    //fetch course schedule based on the selected course 
     public static List<Course_Schedule__c> getCourseScheduleByEnlistment(Id enlistmentId, Id selectedCourseId) {
         if (enlistmentId == null || selectedCourseId == null)
             return new List<Course_Schedule__c>();
         return CourseScheduleSelector.getCourseScheduleBySelectedCourse(selectedCourseId);
     }
 
-     public static Id createCourseEnlistment(Id courseScheduleId,Id enlistmentId){
+    //create a course enlistment
+    public static Id createCourseEnlistment(Id courseScheduleId,Id enlistmentId){
 
         Enlistment__c enlistment = EnlistmentSelector.getEnlistmentById(enlistmentId);
         Course_Schedule__c cs = CourseScheduleSelector.getSelectedCourseScheduleById(courseScheduleId);
@@ -41,7 +44,7 @@ public with sharing class CourseEnlistmentService {
             throw new AuraHandledException(e.getDmlMessage(0));
         }
     }
-
+    // update the total units in the enlistment when a new course is inserted
      private static void updateTotalUnits(Enlistment__c enlistment,Decimal numberOfUnits){
 
         Decimal currentTotalUnits = enlistment.Total_Units__c == null?   0.0: enlistment.Total_Units__c;   
@@ -54,6 +57,7 @@ public with sharing class CourseEnlistmentService {
         update newEnlistment;
     }
 
+    //check if the the units exceed the maximum value
     private static Boolean checkUnitsExceed(Decimal maxUnits, Decimal numberOfUnits){
         return numberOfUnits > maxUnits;
     }

@@ -2,6 +2,7 @@ public with sharing class CourseSelector {
 
     private static final Decimal PASSING_GRADE = 75;
 
+    // return the selected course by id
     public static Course__c getSelectedCourseById(Course_Schedule__c courseSchedule) {
         if (courseSchedule == null || courseSchedule.Course__c == null) {
             return null;
@@ -15,6 +16,7 @@ public with sharing class CourseSelector {
         ];
     }
 
+    // return lis of courses based on the semester and year level 
     public static List<Course__c>getCourseByEnlistmentSemesterAndYearLevel(Enlistment__c enlistment) {
 
         List<Course__c> matchingCourses = [
@@ -30,15 +32,16 @@ public with sharing class CourseSelector {
             return new List<Course__c>();
         }
 
+        // initialize a set to store all course with prerequisites
         Set<Id> prerequisiteCourseIds = new Set<Id>();
 
         for (Course__c course : matchingCourses) {
             if (course.Prerequisite__c != null)
-                prerequisiteCourseIds.add(course.Prerequisite__c);
+                prerequisiteCourseIds.add(course.Prerequisite__c); // add the id to the prerequisiteCourseIds if there is prerequisite course
         }
         
         if(prerequisiteCourseIds.isEmpty()) {
-            return matchingCourses;
+            return matchingCourses; // return all the matching courses because all there were no prerequisites
         }
 
         Set<Id> passedCourseIds = new Set<Id>();

@@ -1,5 +1,6 @@
 public with sharing class CourseScheduleSelector {
    
+    // fetch course schedule based on the course schedule selected
     public static Course_Schedule__c getSelectedCourseScheduleById(Id courseScheduleId){
         Course_Schedule__c selectCourseSchedule = [
            SELECT Id, Course__c
@@ -10,6 +11,8 @@ public with sharing class CourseScheduleSelector {
 
         return selectCourseSchedule;
     }
+
+    // return a list of  course schedules based on the course selected schedules
     public static List<Course_Schedule__c> getCourseScheduleBySelectedCourse(Id selectedCourseId){
         List<Course_Schedule__c> courseSchedule = [
              SELECT Id, Course__c, Course__r.Name, Days_S__c, Time_Slots__c, Venue__c
