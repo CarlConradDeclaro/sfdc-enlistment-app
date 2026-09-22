@@ -1,6 +1,6 @@
 public with sharing class CourseEnlistmentService {
    
-    private static final String MAX_UNITS_ERROR = 'Maximum units exceeded';
+    private static final String MAX_UNITS_ERROR = 'You cannot add this class because you will exceed the maximum load allowed';
 
     //fetch all the courses
     public static List<Course__c> getCourses(Id enlistmentId){

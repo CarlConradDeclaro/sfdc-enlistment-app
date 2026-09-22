@@ -22,6 +22,8 @@ export default class CoursePicker extends LightningElement {
     }
 
     rawCourses = [];
+
+    
     
      
     buildRows() {

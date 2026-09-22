@@ -1,5 +1,6 @@
 import { LightningElement, api } from 'lwc';
 import createCourseEnlistment from '@salesforce/apex/CourseEnlistmentController.createCourseEnlistment'
+import { notifyRecordUpdateAvailable } from 'lightning/uiRecordApi';
 
 
 const LAST_STEP = 3 ;
@@ -56,9 +57,15 @@ export default class CourseEnlistmentWizard extends LightningElement {
 
         if(!res){
           return;
+        }else{
+          notifyRecordUpdateAvailable([
+            { recordId: this.recordId }]);
         }
+        
         this.successMessage= SUCCESS_MESSAGE;
         this.isSuccess = true;
+
+        
 
     }
 
@@ -88,6 +95,7 @@ export default class CourseEnlistmentWizard extends LightningElement {
     
     async handleSave(){
         await this.handleCourseEnlistment();
+
     }
 
     handleBack() {

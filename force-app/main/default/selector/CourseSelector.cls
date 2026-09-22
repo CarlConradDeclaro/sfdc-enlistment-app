@@ -46,6 +46,7 @@ public with sharing class CourseSelector {
 
         Set<Id> passedCourseIds = new Set<Id>();
 
+        //fetch all the courses that has prerequisite and check if passed
         List<Course_Enlistment__c> passedCourseEnlistments = [
             SELECT Id,Course_Grade__c,Course_Schedule__r.Course__c
             FROM Course_Enlistment__c
@@ -55,16 +56,17 @@ public with sharing class CourseSelector {
         ];
 
         for (Course_Enlistment__c previousCourse :passedCourseEnlistments) {
-            passedCourseIds.add(previousCourse.Course_Schedule__r.Course__c);
+            passedCourseIds.add(previousCourse.Course_Schedule__r.Course__c); // add all the passedCourseEnlistment to passedCourseIds
         }
 
         List<Course__c> eligibleCourses = new List<Course__c>();
 
         for (Course__c course : matchingCourses) {
-            Boolean hasNoPrerequisite = course.Prerequisite__c == null;
+            Boolean hasNoPrerequisite = course.Prerequisite__c == null;// the course doesnt have a prerequisite
 
-            Boolean passedPrerequisite = passedCourseIds.contains(course.Prerequisite__c);
-
+            Boolean passedPrerequisite = passedCourseIds.contains(course.Prerequisite__c); // the course has prerequisite and check if it passed
+            
+            //either hasNoPreRequisite or passedPrequisite is true it will be added in the eligibleCourses list
             if (hasNoPrerequisite || passedPrerequisite) {
                 eligibleCourses.add(course);
             }
