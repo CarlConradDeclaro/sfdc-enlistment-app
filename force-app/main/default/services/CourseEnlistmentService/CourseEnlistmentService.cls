@@ -15,6 +15,7 @@ public with sharing class CourseEnlistmentService {
     public static List<Course_Schedule__c> getCourseScheduleByEnlistment(Id enlistmentId, Id selectedCourseId) {
         if (enlistmentId == null || selectedCourseId == null)
             return new List<Course_Schedule__c>();
+            
         return CourseScheduleSelector.getCourseScheduleBySelectedCourse(selectedCourseId);
     }
 
@@ -29,15 +30,15 @@ public with sharing class CourseEnlistmentService {
         if(checkUnitsExceed(enlistment.Maximum_Units__c, totalUnits))
             throw new AuraHandledException(MAX_UNITS_ERROR);
 
+
         try {
             Course_Enlistment__c newCE =  new Course_Enlistment__c(
                 Course_Schedule__c = courseScheduleId,
                 Enlistment__c = enlistmentId,
                 Student__c = enlistment.Student__c
             );
-
             insert newCE;
-            updateTotalUnits(enlistment, course.Units__c);
+            updateTotalUnits(enlistmentId, enlistment.Total_Units__c, course.Units__c);
 
             return newCe.Id;
         } catch (DmlException e) {
@@ -45,13 +46,14 @@ public with sharing class CourseEnlistmentService {
         }
     }
     // update the total units in the enlistment when a new course is inserted
-     private static void updateTotalUnits(Enlistment__c enlistment,Decimal numberOfUnits){
+     @future
+     private static void updateTotalUnits(Id enlistment, Decimal totalUnits,Decimal numberOfUnits){
 
-        Decimal currentTotalUnits = enlistment.Total_Units__c == null?   0.0: enlistment.Total_Units__c;   
+        Decimal currentTotalUnits = totalUnits == null?   0.0: totalUnits;   
         currentTotalUnits+=numberOfUnits;
 
         Enlistment__c newEnlistment  = new Enlistment__c();
-        newEnlistment.Id = enlistment.Id;
+        newEnlistment.Id = enlistment;
         newEnlistment.Total_Units__c = currentTotalUnits;
 
         update newEnlistment;
